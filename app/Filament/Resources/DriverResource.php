@@ -2,37 +2,36 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\VehicleSaleResource\Pages;
-use App\Filament\Resources\VehicleSaleResource\RelationManagers;
-use App\Models\VehicleSale;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Driver;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\DriverResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\DriverResource\RelationManagers;
 
-class VehicleSaleResource extends Resource
+class DriverResource extends Resource
 {
-    protected static ?string $model = VehicleSale::class;
+    protected static ?string $model = Driver::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('brand')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('harga')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('tahun')
+            Select::make('vehicles_id')
+            ->label('Nama Kendaraan')
+            ->relationship('vehicles', 'nama_kendaraan') 
+            ->required(),
+                Forms\Components\FileUpload::make('image')
+                    ->image()
+                    ->required(),
+                Forms\Components\TextInput::make('nama_driver')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -42,13 +41,11 @@ class VehicleSaleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('brand')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('harga')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tahun')
+                Tables\Columns\TextColumn::make('vehicles.nama_kendaraan')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\TextColumn::make('nama_driver')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -82,9 +79,9 @@ class VehicleSaleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListVehicleSales::route('/'),
-            'create' => Pages\CreateVehicleSale::route('/create'),
-            'edit' => Pages\EditVehicleSale::route('/{record}/edit'),
+            'index' => Pages\ListDrivers::route('/'),
+            'create' => Pages\CreateDriver::route('/create'),
+            'edit' => Pages\EditDriver::route('/{record}/edit'),
         ];
     }
 }

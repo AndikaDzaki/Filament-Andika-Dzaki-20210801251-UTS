@@ -17,7 +17,7 @@ class VehiclesResource extends Resource
 {
     protected static ?string $model = Vehicles::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-cog';
 
     public static function form(Form $form): Form
     {
@@ -49,7 +49,9 @@ class VehiclesResource extends Resource
                 Tables\Columns\TextColumn::make('warna')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('no_polisi')
-                    ->searchable(),
+                ->label('No Polisi')
+                ->formatStateUsing(fn ($state) => substr($state, 0, 2) . '****' . substr($state, -2)),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

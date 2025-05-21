@@ -14,7 +14,7 @@ class Vehicles extends Model implements Auditable
 
     protected $table = 'vehicles';
 
-    
+
     protected $fillable = [
         'nama_kendaraan',
         'merk',
@@ -49,6 +49,12 @@ class Vehicles extends Model implements Auditable
 
         return $value;
     }
+
+    public function driver()
+    {
+        return $this->hasMany(Driver::class, 'vehicles_id');
+    }
+
 
 
 
